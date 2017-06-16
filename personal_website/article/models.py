@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""User models."""
+"""Article model"""
 import datetime as dt
 import re
 from micawber import parse_html
@@ -10,8 +10,6 @@ from markdown.extensions.extra import ExtraExtension
 from flask import Markup
 
 from personal_website.database import Column, Model, SurrogatePK, db, reference_col, relationship
-from personal_website.extensions import bcrypt
-from personal_website.utils import slugify
 
 
 class Article(SurrogatePK, Model):
@@ -23,7 +21,7 @@ class Article(SurrogatePK, Model):
     published = Column(db.Boolean(), default=False)
     timestamp = Column(db.DateTime, default=dt.datetime.now(), nullable=False)
     slug = Column(Column(db.String(48), unique=True, nullable=False)
-    user_id = reference_col('users')
+    user_id = reference_col('users', nullable=False)
     user = relationship('User', backref='articles')
 
     def __init__(self, title, body, **kwargs):
@@ -31,7 +29,7 @@ class Article(SurrogatePK, Model):
         if self.title:
             self.slug = slugify(self.title)
         else:
-            self.slug = self.user.__repr__() + '-' + str(self.id)
+            self.slug = self.id
 
     def slugify(self, text, delim='-'):
         """Generates a slug."""
@@ -41,6 +39,14 @@ class Article(SurrogatePK, Model):
             if word:
                 result.append(word)
         return delim.join(result)
+
+    @classmethod
+    def pubilc(cls):
+        return Article.filter_by(published=True)
+
+    @classmethod
+    def drafts(cls):
+        return Article.filter_by(published=False)
 
     @property
     def html_content(self):

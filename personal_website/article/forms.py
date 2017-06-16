@@ -19,7 +19,6 @@ class ArticleForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         """Create instance."""
         super().__init__(*args, **kwargs)
-        self.user = None
 
     def validate(self):
         """Validate the form."""
