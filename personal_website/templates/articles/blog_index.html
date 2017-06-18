@@ -1,0 +1,27 @@
+
+{% extends "layout.html" %}
+{% block content %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="body-header">
+
+  <h1>Welcome to My Blog</h1>
+
+  <p>This is where I can talk about stuff that interests me</p>
+  <hr>
+  <hr>
+</div>
+
+<div class="body-content">
+  {% for article in query %}
+    <h3>
+      <a href="{% if article.published %}{{ url_for('article', slug=article.slug) }}{% else %}{{ url_for('edit', slug=article.slug) }}{% endif %}">
+        {{ article.title }}
+      </a>
+    </h3>
+    <p>Created on {{ article.timestamp.strftime('%m/%d/%Y') }}</p>
+    <hr width="75%">
+  {% endfor %}
+</div>
+{% endblock %}
+
+
