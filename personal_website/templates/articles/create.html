@@ -5,7 +5,8 @@
     <h1>Create entry</h1>
   </div>
 
-  <form action="{{ url_for('create') }}" class="form-horizontal" method="post">
+  <form action="{{ url_for('article.create') }}" class="form-horizontal" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="form-group">
       <label for="title" class="col-sm-2 control-label">Title</label>
       <div class="col-sm-10">
@@ -30,7 +31,7 @@
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <button class="btn btn-primary" type="submit">Save</button>
-        <a class="btn btn-default" href="{{ url_for('blog_index') }}">Cancel</a>
+        <a class="btn btn-default" href="{{ url_for('article.blog') }}">Cancel</a>
       </div>
     </div>
   </form>

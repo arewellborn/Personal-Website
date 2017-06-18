@@ -16,13 +16,14 @@ def blog():
     """List published articles"""
 
     query = Article.public().order_by(Article.timestamp.desc())
-    return render_template('articles/blog_index.html', query)
+    return render_template('articles/blog_index.html', query=query)
 
 
-@blueprint.route('/<slug>/')
+@blueprint.route('/<slug>/', methods=['GET'])
 def article(slug):
     """Call Article from slug"""
     if session.get('logged_in'):
+        print(slug)
         article = get_object_or_404(Article, Article.slug == slug)
     else:
         article = get_object_or_404(Article.public(), Article.slug == slug)
@@ -35,7 +36,7 @@ def drafts():
     """List unpublished articles"""
 
     query = Article.drafts().order_by(Article.timestamp.desc())
-    return render_template('articles/blog_index.html', query)
+    return render_template('articles/blog_index.html', query=query)
 
 
 
@@ -48,12 +49,12 @@ def create():
     if request.method == 'POST':
         if form.validate_on_submit():
             article = Article.create(title=form.title.data, body=form.body.data, 
-                                     published=form.publised.data, user_id=current_user.id)
+                                     published=form.published.data, author=current_user)
             flash('You have created an article', 'success')
             if article.published:
-                return redirect(url_for('article.article', slug=article.slug))
+                return redirect(url_for('.article', slug=article.slug))
             else:
-                return redirect(url_for('article.edit'), slug=article.slug))
+                return redirect(url_for('.edit', slug=article.slug))
 
         else:
             flash_errors(form)
@@ -65,19 +66,22 @@ def create():
 def edit(slug):
     """Edit an existing article"""
     article = get_object_or_404(Article, Article.slug == slug)    
+    form = request.form
+    form.title = article.title
+    form.body = article.body
+    form.published = article.published
 
     if request.method == 'POST':
-        form = request.form
 
         if form.get('title') and form.get('body'):
-            article.update(title=form.title, body=form.body, published=form.published)
+            article = article.update(title=form.title, body=form.body, published=form.published)
             
             if article.published:
                 flash('Article updated and published', 'success')
-                return redirect(url_for('article.article', slug=article.slug))
+                return redirect(url_for('.article', slug=article.slug))
             else:
                 flash('Article updated', 'success')
-                return redirect(url_for('article.edit'), slug=article.slug))
+                return redirect(url_for('.edit', slug=article.slug))
 
         else:
             flash('Title and body required.', 'danger')

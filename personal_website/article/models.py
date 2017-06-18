@@ -10,22 +10,22 @@ from markdown.extensions.extra import ExtraExtension
 from flask import Markup
 
 from personal_website.database import Column, Model, SurrogatePK, db, reference_col, relationship
+from personal_website.utils import slugify
 
 
 class Article(SurrogatePK, Model):
-    """The aritcles a user creates"""
+    """The articles a user creates"""
     
     __tablename__ = 'articles'
     title = Column(db.String(32), unique=True, nullable=False)
     body = Column(db.String(2048))
     published = Column(db.Boolean(), default=False)
     timestamp = Column(db.DateTime, default=dt.datetime.now(), nullable=False)
-    slug = Column(Column(db.String(48), unique=True, nullable=False)
-    user_id = reference_col('users', nullable=False)
-    user = relationship('User', backref='articles')
+    slug = Column(db.String(48), unique=True, nullable=False)
+    user_id = reference_col('users')
 
     def __init__(self, title, body, **kwargs):
-        Model.__init__(title=title, body=body, **kwargs)
+        Model.__init__(self, title=title, body=body, **kwargs)
         if self.title:
             self.slug = slugify(self.title)
         else:
@@ -41,12 +41,12 @@ class Article(SurrogatePK, Model):
         return delim.join(result)
 
     @classmethod
-    def pubilc(cls):
-        return Article.filter_by(published=True)
+    def public(cls):
+        return Article.query.filter_by(published=True)
 
     @classmethod
     def drafts(cls):
-        return Article.filter_by(published=False)
+        return Article.query.filter_by(published=False)
 
     @property
     def html_content(self):

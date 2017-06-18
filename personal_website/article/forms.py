@@ -5,6 +5,8 @@ from wtforms import StringField, BooleanField
 from wtforms.validators import DataRequired, EqualTo, Length
 from flask import request
 
+from personal_website.extensions import db
+from personal_website.utils import slugify
 from .models import Article
 
 
@@ -29,7 +31,7 @@ class ArticleForm(FlaskForm):
         if title:
             self.title.errors.append('Title already Used')
             return False
-        slug = Article.query.filter_by(slug=self.slug.data).first()
+        slug = Article.query.filter_by(slug=slugify(self.title.data)).first()
         if slug:
             self.title.errors.append('Error producing url. Try a different title.')
             return False
