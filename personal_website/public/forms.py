@@ -37,6 +37,7 @@ class RedirectForm(FlaskForm):
         target = get_redirect_target()
         return redirect(target or url_for(endpoint, **values))
 
+
 class LoginForm(RedirectForm):
     """Login form."""
 

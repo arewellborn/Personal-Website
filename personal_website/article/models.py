@@ -25,7 +25,7 @@ class Article(SurrogatePK, Model):
     user = relationship('User', backref='articles')
 
     def __init__(self, title, body, **kwargs):
-        db.Model.__init__(title=title, body=body, **kwargs)
+        Model.__init__(title=title, body=body, **kwargs)
         if self.title:
             self.slug = slugify(self.title)
         else:
