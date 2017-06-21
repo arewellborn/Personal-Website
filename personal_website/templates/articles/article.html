@@ -1,9 +1,5 @@
 {% extends "layout.html" %}
 
-{% block edit_header %}
-  <a href="{{ url_for('edit'), slug=article.slug}}">Edit Article</a>
-{% endblock %}
-
 {% block content %}
   <div class="body-header">
     <h1>{{ article.title }}</h1>

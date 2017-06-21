@@ -7,6 +7,8 @@ from .models import Article
 from .forms import ArticleForm
 from personal_website.utils import flash_errors, get_object_or_404
 
+from flask import Flask
+app = Flask(__name__)
 
 blueprint = Blueprint('article', __name__, url_prefix='/blog', static_folder='../static')
 
@@ -22,8 +24,7 @@ def blog():
 @blueprint.route('/<slug>/', methods=['GET'])
 def article(slug):
     """Call Article from slug"""
-    if session.get('logged_in'):
-        print(slug)
+    if current_user and current_user.is_authenticated:
         article = get_object_or_404(Article, Article.slug == slug)
     else:
         article = get_object_or_404(Article.public(), Article.slug == slug)
@@ -65,25 +66,25 @@ def create():
 @login_required
 def edit(slug):
     """Edit an existing article"""
-    article = get_object_or_404(Article, Article.slug == slug)    
-    form = request.form
-    form.title = article.title
-    form.body = article.body
-    form.published = article.published
+    article = get_object_or_404(Article, Article.slug == slug)
 
     if request.method == 'POST':
-
+        form = request.form
+        app.logger.debug('request form.published = {}'.format(form['published']))
+        app.logger.debug('form.published type = {}'.format(bool(form['published'])))
+        app.logger.debug('form.published type int convert= {}'.format(type(bool(form['published']))))
         if form.get('title') and form.get('body'):
-            article = article.update(title=form.title, body=form.body, published=form.published)
+            article = article.update(title=form['title'], body=form['body'], published=bool(form['published']))
             
             if article.published:
                 flash('Article updated and published', 'success')
                 return redirect(url_for('.article', slug=article.slug))
             else:
                 flash('Article updated', 'success')
-                return redirect(url_for('.edit', slug=article.slug))
+                return redirect(url_for('.blog'))
 
         else:
             flash('Title and body required.', 'danger')
-    return render_template('articles/edit.html', form=form)
+
+    return render_template('articles/edit.html', article=article)
 

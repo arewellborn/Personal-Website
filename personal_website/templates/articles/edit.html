@@ -5,24 +5,25 @@
     <h1>Edit entry</h1>
   </div>
 
-  <form action="{{ url_for('article.edit', slug=slug) }}" class="form-horizontal" method="post">
+  <form action="{{ url_for('article.edit', slug=article.slug) }}" class="form-horizontal" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="form-group">
       <label for="title" class="col-sm-2 control-label">Title</label>
       <div class="col-sm-10">
-        <input class="form-control" id="title" name="title" type="text" value="{{ form.title }}">
+        <input class="form-control" id="title" name="title" type="text" value="{{ article.title }}">
       </div>
     </div>
     <div class="form-group">
       <label for="Content" class="col-sm-2 control-label">Body</label>
       <div class="col-sm-10">
-        <textarea class="form-control" id="body" name="body" style="height: 300px;">{{ form.body }}</textarea>
+        <textarea class="form-control" id="body" name="body" style="height: 300px;">{{ article.body }}</textarea>
       </div>
     </div>
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <div class="checkbox">
           <label>
-            <input {% if form.published %}checked="checked" {% endif %}name="published" type="checkbox" value="y"> Publish?
+            <input {% if article.published %}checked="checked" value=1 {% else %}value=0 {% endif %}id="published" name="published" type="checkbox"> Publish?
           </label>
         </div>
       </div>

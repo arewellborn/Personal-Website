@@ -2,7 +2,7 @@
 """Article model"""
 import datetime as dt
 import re
-from micawber import parse_html
+from micawber import parse_html, bootstrap_basic
 from micawber.cache import Cache as OEmbedCache
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
@@ -31,15 +31,6 @@ class Article(SurrogatePK, Model):
         else:
             self.slug = self.id
 
-    def slugify(self, text, delim='-'):
-        """Generates a slug."""
-        punc = r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+'
-        result = []
-        for word in re.split(punc, text.lower()):
-            if word:
-                result.append(word)
-        return delim.join(result)
-
     @classmethod
     def public(cls):
         return Article.query.filter_by(published=True)
@@ -53,12 +44,13 @@ class Article(SurrogatePK, Model):
         hilite = CodeHiliteExtension(linenums=False, css_class='highlight')
         extras = ExtraExtension()
         markdown_content = markdown(self.body, extensions=[hilite, extras])
+        oembed_providers = bootstrap_basic(OEmbedCache)
         oembed_content = parse_html(
             markdown_content,
-            oembend_providers,
+            oembed_providers,
             urlize_all=True)
         return Markup(oembed_content)
 
     def __repr__(self):
         """Represent instance as a unique string"""
-        return '<{slug}>'.format(slug=self.slug)
+        return '<Article({slug})>'.format(slug=self.slug)
