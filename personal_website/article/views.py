@@ -70,18 +70,22 @@ def edit(slug):
 
     if request.method == 'POST':
         form = request.form
-        app.logger.debug('request form.published = {}'.format(form['published']))
-        app.logger.debug('form.published type = {}'.format(bool(form['published'])))
-        app.logger.debug('form.published type int convert= {}'.format(type(bool(form['published']))))
+        app.logger.debug('request form keys = {}'.format(list(form.items())))
         if form.get('title') and form.get('body'):
-            article = article.update(title=form['title'], body=form['body'], published=bool(form['published']))
+
+            if form.get('published'):
+                published = True
+            else:
+                published = False
+
+            article = article.update(title=form['title'], body=form['body'], published=published)
             
             if article.published:
                 flash('Article updated and published', 'success')
                 return redirect(url_for('.article', slug=article.slug))
             else:
                 flash('Article updated', 'success')
-                return redirect(url_for('.blog'))
+                return redirect(url_for('.drafts'))
 
         else:
             flash('Title and body required.', 'danger')
