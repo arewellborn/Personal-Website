@@ -6,6 +6,7 @@ css = Bundle(
     'libs/bootstrap/dist/css/bootstrap.css',
     'css/style.css',
     'css/nav.css',
+    'css/blog.css',
     filters='cssmin',
     output='public/css/common.css'
 )
