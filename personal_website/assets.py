@@ -7,6 +7,7 @@ css = Bundle(
     'css/style.css',
     'css/nav.css',
     'css/blog.css',
+    'css/about.css',
     filters='cssmin',
     output='public/css/common.css'
 )

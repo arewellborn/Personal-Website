@@ -1,11 +1,22 @@
 
 {% extends "layout.html" %}
 
+{% block background_image %}{% endblock %}
+{% block content_class %}container{% endblock %}
+{% block body_class %}about{% endblock %}
+
 {% block content %}
-<div class="body-content">
+<div class="body-content transparent">
     <div class="row">
-      <h1>About</h1>
-      <p>This template was created by <a href="http://github.com/sloria/">Steven Loria</a> for use with the <a href="http://github.com/audreyr/cookiecutter/">cookiecutter</a> package by <a href="http://github.com/audreyr/">Audrey Roy</a>.</p>
+      <div class="col-md-8 col-mid-offset-4 col-lg-6 col-lg-offset-6 col-sm-12">
+        <h1 class="color-primary-3">I'm Ryan Wellborn</h1>
+        <p class="color-complement-4">I live in Salt Lake City and currently attend the University of Utah. My first degree is in Environmental
+Studies from a <a href="http://www.prescott.edu" style="color: #B05000" target="_blank">school</a> 
+that asked all students to step outside of their comfort zone. Using these lessons, I married the passions that I developed 
+during my first degree with a strong desire to step into the role of someone who solves complex problems. </p>
+        <p class="color-complement-4">In my spare time I work on projects that help me grow. I have worked on personal projects that include image 
+analysis, machine learning, making business cards using flexible circuits and LEDs, and using math and lasers to make clocks. </p>
+      </div>
     </div>
 </div>
 {% endblock %}

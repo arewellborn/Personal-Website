@@ -1,31 +1,41 @@
 
 {% extends "layout.html" %}
+{% block content_class %}{% endblock %}
+
 {% block content %}
 <!-- Main jumbotron for a primary marketing message or call to action -->
-<div class="jumbotron">
+<div class="jumbotron background-complement-3">
+  <div class="container">
+    <div class="col-md-4 col-sm-12 headshot" align="center">
+      <img src="{{ url_for('static', filename='me-headshot.png') }}"></img>
+    </div>
+    <div class="col-md-8 col-sm-12">
+      <h1>Welcome to my website!</h1>
 
-  <h1>Welcome to Personal Website</h1>
-
-  <p>This is a starter Flask template. It includes Bootstrap 3, jQuery 2, Flask-SQLAlchemy, WTForms, and various testing utilities out of the box.</p>
-  <p><a href="https://github.com/sloria/cookiecutter-flask" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+      <p>I am an Electrical Engineering student attending the University of Utah and a Student Engineer at Rocky Mountain Power. I built this website
+as a small project to learn some of the important parts of web and software design. Check out my 
+<a href="{{ url_for('public.about') }}" style="color: #D86200">about</a> page for a little background on me, or take a look at my 
+<a href="{{ url_for('article.blog') }}" style="color: #D86200">blog</a> to see some of what's going on in my life.</p>
+    </div>
+  </div>
 </div><!-- /.jumbotron -->
 
-<div class="body-content">
+<div class="container">
   <div class="row">
     <div class="col-lg-4">
-      <h2><i class="fa fa-code"></i> Bootstrap 3</h2>
-      <p>Sleek, intuitive, and powerful mobile-first front-end framework for faster and easier web development.</p>
-      <p><a class="btn btn-default" href="http://getbootstrap.com/">Official website &raquo;</a></p>
+      <h2 class="color-primary-3"><i class="fa fa-code"></i> Github</h2>
+      <p class="color-primary-3">The code for this website and other projects can be found here.</p>
+      <p><a class="btn btn-default" href="https://github.com/arewellborn" target="_blank">Fork me! &raquo;</a></p>
     </div>
     <div class="col-lg-4">
-      <h2><i class="fa fa-flask"></i> SQLAlchemy</h2>
-      <p>SQLAlchemy is the Python SQL toolkit and Object Relational Mapper that gives application developers the full power and flexibility of SQL.</p>
-      <p><a href="http://www.sqlalchemy.org/" class="btn btn-default">Official website &raquo;</a></p>
+      <h2 class="color-primary-3"><i class="fa fa-linkedin"></i> Linkedin</h2>
+      <p class="color-primary-3">The ubiquitous and essential Linkedin plug.</p>
+      <p><a href="https://www.linkedin.com/in/ryan-wellborn-750113141" class="btn btn-default" target="_blank">Let's Connect! &raquo;</a></p>
    </div>
     <div class="col-lg-4">
-      <h2><i class="fa fa-edit"></i> WTForms</h2>
-      <p>WTForms is a flexible forms validation and rendering library for python web development.</p>
-      <p><a href="http://wtforms.simplecodes.com/" class="btn btn-default">Official website &raquo;</a></p>
+      <h2 class="color-primary-3"><i class="fa fa-envelope"></i> Contact Me</h2>
+      <p class="color-primary-3">Shoot me an email if you want to get in touch.</p>
+      <p><a class="btn btn-default" href="mailto:wellborn.ryan@gmail.com">Contact &raquo;</a></p>
     </div>
   </div><!-- /.row -->
 </div>

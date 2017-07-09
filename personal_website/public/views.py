@@ -18,9 +18,15 @@ def load_user(user_id):
     return User.get_by_id(int(user_id))
 
 
-@blueprint.route('/', methods=['GET', 'POST'])
+@blueprint.route('/')
 def home():
     """Home page."""
+    return render_template('public/home.html')
+
+
+blueprint.route('/login/', methods=['GET','POST'])
+def login():
+    """Login."""
     form = LoginForm(request.form)
     # Handle logging in
     if request.method == 'POST':
@@ -28,10 +34,10 @@ def home():
             login_user(form.user)
             flash('You are logged in.', 'success')
             return form.redirect('user.members')
-	    
+
         else:
             flash_errors(form)
-    return render_template('public/home.html', form=form)
+    return render_template('public/login.html', form=form)
 
 
 @blueprint.route('/logout/')
@@ -59,5 +65,4 @@ def register():
 @blueprint.route('/about/')
 def about():
     """About page."""
-    form = LoginForm(request.form)
-    return render_template('public/about.html', form=form)
+    return render_template('public/about.html')
