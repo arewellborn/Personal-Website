@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
-"""Article model"""
+"""Article model."""
+
 import datetime as dt
-import re
-from micawber import parse_html, bootstrap_basic
-from micawber.cache import Cache as OEmbedCache
+
+from flask import Markup
 from markdown import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.extensions.extra import ExtraExtension
-from flask import Markup
+from micawber import bootstrap_basic, parse_html
+from micawber.cache import Cache as OEmbedCache
 
-from personal_website.database import Column, Model, SurrogatePK, db, reference_col, relationship
+from personal_website.database import db, Column, Model, SurrogatePK, reference_col
 from personal_website.utils import slugify
 
 
 class Article(SurrogatePK, Model):
-    """The articles a user creates"""
-    
+    """The articles a user creates."""
+
     __tablename__ = 'articles'
     title = Column(db.String(32), unique=True, nullable=False)
     body = Column(db.String(2048))
@@ -25,6 +26,7 @@ class Article(SurrogatePK, Model):
     user_id = reference_col('users')
 
     def __init__(self, title, body, **kwargs):
+        """Initialize Article."""
         Model.__init__(self, title=title, body=body, **kwargs)
         if self.title:
             self.slug = slugify(self.title)
@@ -33,14 +35,17 @@ class Article(SurrogatePK, Model):
 
     @classmethod
     def public(cls):
+        """Return published articles."""
         return Article.query.filter_by(published=True)
 
     @classmethod
     def drafts(cls):
+        """Return Draft articles."""
         return Article.query.filter_by(published=False)
 
     @property
     def html_content(self):
+        """Parse article bosy for markup and features."""
         hilite = CodeHiliteExtension(linenums=False, css_class='highlight')
         extras = ExtraExtension()
         markdown_content = markdown(self.body, extensions=[hilite, extras])

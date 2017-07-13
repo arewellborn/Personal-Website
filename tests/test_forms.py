@@ -1,34 +1,35 @@
 # -*- coding: utf-8 -*-
 """Test forms."""
 
+from personal_website.article.forms import ArticleForm
 from personal_website.public.forms import LoginForm
-from personal_website.user.forms import RegisterForm
 
 
-class TestRegisterForm:
-    """Register form."""
+class TestArticleForm:
+    """Article Form."""
 
-    def test_validate_user_already_registered(self, user):
-        """Enter username that is already registered."""
-        form = RegisterForm(username=user.username, email='foo@bar.com',
-                            password='example', confirm='example')
-
+    def test_title_required(self, article):
+        """Publish article."""
+        form = ArticleForm(body=article.body, published=article.published)
         assert form.validate() is False
-        assert 'Username already registered' in form.username.errors
+        assert 'title - This field is required.' in form.title.errors
 
-    def test_validate_email_already_registered(self, user):
-        """Enter email that is already registered."""
-        form = RegisterForm(username='unique', email=user.email,
-                            password='example', confirm='example')
-
+    def test_validate_title_exists(self, article):
+        """Title already exists."""
+        article.published = True
+        article.save()
+        form = ArticleForm(title=article.title, body=article.body, published=True)
         assert form.validate() is False
-        assert 'Email already registered' in form.email.errors
+        assert 'Title already Used' in form.title.errors
 
-    def test_validate_success(self, db):
-        """Register with success."""
-        form = RegisterForm(username='newusername', email='new@test.test',
-                            password='example', confirm='example')
-        assert form.validate() is True
+    def test_validate_slug_exists(self, article):
+        """Title already exists."""
+        article.published = True
+        article.save()
+        form = ArticleForm(title=article.title, body=article.body, published=True)
+        assert form.validate() is False
+        assert 'Error producing url. Try a different title.' in form.title.errors
+
 
 
 class TestLoginForm:

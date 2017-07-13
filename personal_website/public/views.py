@@ -5,7 +5,6 @@ from flask_login import login_required, login_user, logout_user
 
 from personal_website.extensions import login_manager
 from personal_website.public.forms import LoginForm
-from personal_website.user.forms import RegisterForm
 from personal_website.user.models import User
 from personal_website.utils import flash_errors
 

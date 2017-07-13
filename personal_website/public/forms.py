@@ -1,37 +1,45 @@
 # -*- coding: utf-8 -*-
 """Public forms."""
+
+from urllib.parse import urljoin, urlparse
+
+from flask import redirect, request, url_for
 from flask_wtf import FlaskForm
-from wtforms import PasswordField, StringField, HiddenField
+from wtforms import HiddenField, PasswordField, StringField
 from wtforms.validators import DataRequired
-from urllib.parse import urlparse, urljoin
-from flask import request, url_for, redirect
 
 from personal_website.user.models import User
 
 
 def is_safe_url(target):
+    """Test for safe url."""
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
-    return test_url.scheme in ('http', 'https') and \
-           ref_url.netloc == test_url.netloc
+    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
 
 def get_redirect_target():
+    """Redirect function."""
     for target in request.args.get('next'), request.referrer:
         if not target:
             continue
         if is_safe_url(target):
             return target
 
+
 class RedirectForm(FlaskForm):
+    """Form with safe redirect method."""
+
     next = HiddenField()
 
     def __init__(self, *args, **kwargs):
+        """Initialize RedirectForm."""
         FlaskForm.__init__(self, *args, **kwargs)
         if not self.next.data:
             self.next.data = get_redirect_target() or ''
 
     def redirect(self, endpoint='user.members', **values):
+        """Safe redirect method."""
         if is_safe_url(self.next.data):
             return redirect(self.next.data)
         target = get_redirect_target()
@@ -68,6 +76,3 @@ class LoginForm(RedirectForm):
             self.username.errors.append('User not activated')
             return False
         return True
-
-
-

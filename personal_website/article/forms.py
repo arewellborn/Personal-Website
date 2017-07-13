@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Article forms."""
-from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField
-from wtforms.validators import DataRequired, EqualTo, Length
-from flask import request
 
-from personal_website.extensions import db
+from flask_wtf import FlaskForm
+from wtforms import BooleanField, StringField
+from wtforms.validators import DataRequired
+
 from personal_website.utils import slugify
+
 from .models import Article
 
 
@@ -36,4 +36,3 @@ class ArticleForm(FlaskForm):
             self.title.errors.append('Error producing url. Try a different title.')
             return False
         return True
-
